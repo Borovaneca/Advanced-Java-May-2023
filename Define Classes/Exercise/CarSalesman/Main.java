@@ -6,75 +6,70 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
+        Map<String, Engine> engines = new LinkedHashMap<>();
+        List<Car> cars = new LinkedList<>();
+        int n = Integer.parseInt(scanner.nextLine());
 
-        int engineAmounts = Integer.parseInt(scanner.nextLine());
-        LinkedHashMap<String, Engine> engineList = new LinkedHashMap<>();
-        LinkedHashMap<String, Car> carList = new LinkedHashMap<>();
+        while (n-- > 0) {
+            String[] engineTokens = scanner.nextLine().split("\\s+");
+            String engineModel = engineTokens[0];
+            int power = Integer.parseInt(engineTokens[1]);
+            Engine engine = createEngine(engineTokens, engineModel, power);
+            engines.put(engineModel, engine);
+        }
+        int m = Integer.parseInt(scanner.nextLine());
 
+        while (m-- > 0) {
+            String[] carTokens = scanner.nextLine().split("\\s+");
+            String carModel = carTokens[0];
+            String engineModel = carTokens[1];
+            Engine engine = engines.get(engineModel);
+            Car car = createCar(carTokens, carModel, engine);
+            cars.add(car);
+        }
 
-        for (int i = 0; i < engineAmounts; i++) {
-            String[] inputEngineData = scanner.nextLine().split("\\s+");
-            String model = inputEngineData[0];
-            int power = Integer.parseInt(inputEngineData[1]);
-            Engine engine;
-            if (inputEngineData.length == 4) {
-                int displacement = Integer.parseInt(inputEngineData[2]);
-                String efficiency = inputEngineData[3];
-                engine = new Engine(model, power, displacement, efficiency);
-            } else if (inputEngineData.length == 3) {
-                if (Character.isDigit(inputEngineData[2].charAt(0))) {
-                    int displacement = Integer.parseInt(inputEngineData[2]);
-                    engine = new Engine(model, power, displacement);
-                } else {
-                    String efficiency = inputEngineData[2];
-                    engine = new Engine(model, power, efficiency);
-                }
-            } else {
-                engine = new Engine(model, power);
+        cars.forEach(System.out::println);
+    }
+
+    private static Car createCar(String[] carTokens, String carModel, Engine engine) {
+        Car car;
+
+        if (carTokens.length == 4) {
+            int weight = Integer.parseInt(carTokens[2]);
+            String color = carTokens[3];
+            car = new Car(carModel, engine, weight, color);
+        } else if (carTokens.length == 2) {
+            car = new Car(carModel, engine);
+        } else {
+            try {
+                int weight = Integer.parseInt(carTokens[2]);
+                car = new Car(carModel, engine, weight);
+            } catch (NumberFormatException e) {
+                String color = carTokens[2];
+                car = new Car(carModel, engine, color);
             }
-
-            engineList.put(model, engine);
-
         }
+        return car;
+    }
 
-        int carAmounts = Integer.parseInt(scanner.nextLine());
+    private static Engine createEngine(String[] engineTokens, String engineModel, int power) {
+        Engine engine;
 
-        for (int i = 0; i < carAmounts; i++) {
-            String[] inputCarData = scanner.nextLine().split("\\s+");
-            String model = inputCarData[0];
-            String engine = inputCarData[1];
-            Engine current = engineList.get(engine);
-            Car car;
-            if (inputCarData.length == 4) {
-                int weight = Integer.parseInt(inputCarData[2]);
-                String color = inputCarData[3];
-                car = new Car(model, current, weight, color);
-            } else if (inputCarData.length == 3) {
-                if (Character.isDigit(inputCarData[2].charAt(0))) {
-                    int weight = Integer.parseInt(inputCarData[2]);
-                    car = new Car(model, current, weight);
-                } else {
-                    String color = inputCarData[2];
-                    car = new Car(model, current, color);
-                }
-            } else {
-                car = new Car(model, current);
+        if (engineTokens.length == 4) {
+            int displacement = Integer.parseInt(engineTokens[2]);
+            String efficiency = engineTokens[3];
+            engine = new Engine(engineModel, power, displacement, efficiency);
+        } else if (engineTokens.length == 2) {
+            engine = new Engine(engineModel, power);
+        } else {
+            try {
+                int displacement = Integer.parseInt(engineTokens[2]);
+                engine = new Engine(engineModel, power, displacement);
+            } catch (NumberFormatException e) {
+                String efficiency = engineTokens[2];
+                engine = new Engine(engineModel, power, efficiency);
             }
-
-            carList.put(model, car);
         }
-
-
-        for (Map.Entry<String, Car> car : carList.entrySet()) {
-            System.out.printf("%s:%n" +
-                            "%s:%n" +
-                            "Power: %d%n" +
-                            "Displacement: %s%n" +
-                            "Efficiency: %s%n" +
-                            "Weight: %s%n" +
-                            "Color: %s%n", car.getValue().getModel(), car.getValue().getEngine().getModel(), car.getValue().getEngine().getPower(),(car.getValue().getEngine().getDisplacement() == -1) ? "n/a" : String.valueOf(car.getValue().getEngine().getDisplacement()),
-                    car.getValue().getEngine().getEfficiency(), (car.getValue().getWeight() == -1) ? "n/a" : String.valueOf(car.getValue().getWeight()), car.getValue().getColor());
-        }
-
+        return engine;
     }
 }

@@ -7,23 +7,26 @@ public class Engine {
     private int displacement;
     private String efficiency;
 
-    public Engine(String model, int power, int displacement, String efficiency) {
-        this.model = model;
+    public Engine(String engineModel, int power) {
+        this.model = engineModel;
         this.power = power;
+        this.displacement = -1; // invalid value
+        this.efficiency = "n/a";
+    }
+
+    public Engine(String engineModel, int power, int displacement) {
+        this(engineModel, power);
         this.displacement = displacement;
+    }
+
+    public Engine(String engineModel, int power, String efficiency) {
+        this(engineModel, power);
         this.efficiency = efficiency;
     }
 
-    public Engine(String model, int power, String efficiency) {
-        this(model, power, -1, efficiency);
-    }
-
-    public Engine(String model, int power, int displacement) {
-        this(model, power, displacement, "n/a");
-    }
-
-    public Engine(String model, int power) {
-        this(model, power, -1, "n/a");
+    public Engine(String engineModel, int power, int displacement, String efficiency) {
+        this(engineModel, power, displacement);
+        this.efficiency = efficiency;
     }
 
     public String getModel() {
@@ -56,5 +59,15 @@ public class Engine {
 
     public void setEfficiency(String efficiency) {
         this.efficiency = efficiency;
+    }
+
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.model).append(":").append(System.lineSeparator());
+        sb.append("Power: ").append(this.power).append(System.lineSeparator());
+        sb.append("Displacement: ").append((this.displacement == -1) ? "n/a" : this.displacement).append(System.lineSeparator());
+        sb.append("Efficiency: ").append(this.efficiency).append(System.lineSeparator());
+        return sb.toString();
     }
 }

@@ -8,22 +8,25 @@ public class Car {
     private String color;
 
 
-    public Car(String model, Engine engine) {
-        this(model, engine, -1, "n/a");
-    }
-
-    public Car(String model, Engine engine, String color) {
-        this(model, engine, -1, color);
-    }
-
-    public Car(String model, Engine engine, int weight) {
-        this(model, engine, weight, "n/a");
-    }
-
-    public Car(String model, Engine engine, int weight, String color) {
-        this.model = model;
+    public Car(String carModel, Engine engine) {
+        this.model = carModel;
         this.engine = engine;
+        this.weight = -1; // invalid value
+        this.color = "n/a";
+    }
+
+    public Car(String carModel, Engine engine, int weight) {
+        this(carModel, engine);
         this.weight = weight;
+    }
+
+    public Car(String carModel, Engine engine, String color) {
+        this(carModel, engine);
+        this.color = color;
+    }
+
+    public Car(String carModel, Engine engine, int weight, String color) {
+        this(carModel, engine, weight);
         this.color = color;
     }
 
@@ -58,5 +61,15 @@ public class Car {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    @Override
+    public String toString(){
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.model).append(":").append(System.lineSeparator());
+        sb.append(this.engine);
+        sb.append("Weight: ").append((this.weight == -1) ? "n/a" : this.weight).append(System.lineSeparator());
+        sb.append("Color: ").append(this.color).append(System.lineSeparator());
+        return sb.toString().trim();
     }
 }
