@@ -7,21 +7,19 @@ public class PrinterQueue {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        String[] data = scanner.nextLine().split(" ");
         ArrayDeque<String> queue = new ArrayDeque<>();
-        for (String item : data) {
-            queue.offer(item);
-        }
-
-        Integer n = Integer.parseInt(scanner.nextLine());
-        while (queue.size() > 1){
-            for (int i = 1; i < n; i++) {
-                queue.offer(queue.poll());
+        String input;
+        while (!(input = scanner.nextLine()).equals("print")) {
+            if (!input.equals("cancel")) {
+                queue.offer(input);
+                continue;
             }
-
-            System.out.println("Removed " + queue.poll());
+            if (queue.isEmpty()) {
+                System.out.println("Printer is on standby");
+                continue;
+            }
+            System.out.println("Canceled " + queue.poll());
         }
-
-        System.out.println("Last is " + queue.poll());
+        System.out.println(String.join("\n", queue));
     }
 }
